@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Daily Forge">
+  <meta name="theme-color" content="#0c0b0a">
+  <meta name="description" content="Daily accountability checklist. Check off the work. Get the score.">
+  <title>Daily Forge</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon.png" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app">
+    <div class="sticky" id="sticky">
+      <header class="top">
+        <div class="brand">
+          <img src="icon-192.png" alt="">
+          <h1>Daily Forge</h1>
+        </div>
+        <div class="top-actions">
+          <button type="button" class="icon-btn" id="shareBtn" aria-label="Share score">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7"/>
+              <path d="M16 6l-4-4-4 4"/>
+              <path d="M12 2v14"/>
+            </svg>
+          </button>
+          <button type="button" class="icon-btn" id="settingsBtn" aria-label="Settings">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H8a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V8c.3.6.9 1 1.5 1.1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"></path>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <div class="date-row">
+        <h2 id="dateTitle">Today</h2>
+        <button type="button" class="back hidden" id="backToday">Today</button>
+      </div>
+
+      <section class="score" id="scoreHero" aria-live="polite">
+        <div class="ring-wrap" id="ring">
+          <svg viewBox="0 0 140 140" aria-hidden="true">
+            <defs>
+              <linearGradient id="emberGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#ffd27a"/>
+                <stop offset="45%" stop-color="#ffb049"/>
+                <stop offset="100%" stop-color="#ff7a1a"/>
+              </linearGradient>
+            </defs>
+            <circle class="track" cx="70" cy="70" r="58"></circle>
+            <circle class="fill" id="ringFill" cx="70" cy="70" r="58"></circle>
+          </svg>
+          <div class="ring-center">
+            <div class="frac" id="frac">0<span> / 149</span></div>
+          </div>
+        </div>
+        <div class="score-side">
+          <div class="compact-date" id="compactDate"></div>
+          <div class="score-label cold" id="scoreLabel">Cold</div>
+          <div class="score-pct" id="scorePct">0%</div>
+          <div class="streaks">
+            <div><span class="fire">✦</span> Streak <strong id="streakNow">0</strong></div>
+            <div>Best <strong id="streakBest">0</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <div class="strip" id="strip" aria-label="Last 7 days"></div>
+    </div>
+
+    <div class="list" id="list"></div>
+  </div>
+
+  <div class="overlay" id="overlay" hidden></div>
+  <aside class="sheet" id="sheet" aria-hidden="true" role="dialog" aria-labelledby="settingsTitle">
+    <div class="sheet-head">
+      <h2 id="settingsTitle">Settings</h2>
+      <button type="button" class="icon-btn" id="closeSettings" aria-label="Close settings">✕</button>
+    </div>
+    <p class="hint">Days roll over at local midnight. Tap a day in the strip to review or edit it. A day counts toward your streak when you reach the threshold — not only on a perfect 149.</p>
+    <div class="setting-item" id="thresholdBlock">
+      <label for="thresholdRange">Streak threshold</label>
+      <div class="thresh-row">
+        <input type="range" id="thresholdRange" min="50" max="100" step="5" value="80">
+        <span id="thresholdValue">80%</span>
+      </div>
+    </div>
+    <div id="itemEditors"></div>
+    <button type="button" class="btn ghost" id="addItem">+ Add item</button>
+    <div class="actions">
+      <button type="button" class="btn wide" id="exportBtn">Export backup</button>
+      <button type="button" class="btn wide" id="importBtn">Import backup</button>
+      <input type="file" id="importFile" class="hidden" accept="application/json,.json">
+    </div>
+    <p class="hint">Everything stays on this device. A backup is just a JSON file you can save or restore later.</p>
+  </aside>
+
+  <div class="overlay" id="shareOverlay" hidden></div>
+  <aside class="sheet" id="shareSheet" aria-hidden="true" role="dialog" aria-labelledby="shareTitle">
+    <div class="sheet-head">
+      <h2 id="shareTitle">Share</h2>
+      <button type="button" class="icon-btn" id="closeShare" aria-label="Close share">✕</button>
+    </div>
+    <img id="sharePreview" class="share-preview" alt="Daily Forge score card">
+    <label class="check-line" for="includeChecklist">
+      <input type="checkbox" id="includeChecklist">
+      <span>Include checklist</span>
+    </label>
+    <p class="hint">Off by default — the card shares your score, not your personal item list.</p>
+    <div class="actions">
+      <button type="button" class="btn primary wide" id="shareConfirm">Share</button>
+      <button type="button" class="btn wide" id="shareDownload">Download image</button>
+      <button type="button" class="btn wide" id="shareCopy">Copy text</button>
+    </div>
+    <p class="hint" id="shareTextPreview"></p>
+  </aside>
+
+  <div class="toast" id="toast" role="status"></div>
+  <script src="app.js"></script>
+</body>
+</html>
