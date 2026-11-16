@@ -12,7 +12,7 @@ A simple iPhone-friendly daily accountability app. Check off the work, get the s
 
 ## How it works
 
-- Check off daily items across Body, Spirit, Recovery, Clean, Family, and Sleep. Each has its own point value (max 149).
+- Check off daily items across Body, Spirit, Recovery, Clean, Family, and Sleep. Each has its own point value (max 150).
 - Your score ring fills as you go. Labels run from Cold to Forged based on the percentage you hit.
 - A day counts toward your streak when you reach the threshold (80% by default). You can change that in Settings.
 - Share a score card with friends. The checklist stays off the card unless you turn it on.

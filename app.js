@@ -1,5 +1,5 @@
 const STORE_KEY = "daily-forge-v1";
-const SCHEMA_VERSION = 2;
+const SCHEMA_VERSION = 3;
 
 const SECTIONS = [
   { id: "body", name: "Body" },
@@ -20,7 +20,7 @@ const DEFAULT_ITEMS = [
   { id: "emmet_fox", name: "Emmet Fox reading", detail: "", points: 4, section: "spirit" },
   { id: "afternoon_meditation", name: "Afternoon meditation", detail: "", points: 6, section: "spirit" },
   { id: "spiritual_literature", name: "Spiritual literature (conscious contact with God)", detail: "", points: 7, section: "spirit" },
-  { id: "spiritual_effort", name: "Meaningful effort to grow spiritual connection", detail: "", points: 8, section: "spirit" },
+  { id: "spiritual_effort", name: "Meaningful effort to grow spiritual connection", detail: "", points: 9, section: "spirit" },
   { id: "aa_meeting", name: "AA meeting", detail: "", points: 10, section: "recovery" },
   { id: "call_sponsor", name: "Call sponsor", detail: "", points: 5, section: "recovery" },
   { id: "recovery_call", name: "Recovery call (other than sponsor)", detail: "", points: 5, section: "recovery" },
@@ -139,11 +139,19 @@ function migrate(parsed) {
   const base = defaultData();
   if (!parsed || typeof parsed !== "object") return base;
 
+  const fromVersion = Number(parsed.version || 1);
   const rawItems = Array.isArray(parsed.items) ? parsed.items : [];
-  const useDefaults = !rawItems.length || isLegacyDefaults(rawItems) || Number(parsed.version || 1) < 2 && isLegacyDefaults(rawItems);
+  const useDefaults = !rawItems.length || isLegacyDefaults(rawItems) || fromVersion < 2 && isLegacyDefaults(rawItems);
   const items = useDefaults
     ? base.items
     : rawItems.map(normalizeItem).filter(Boolean);
+  if (fromVersion < 3) {
+    for (const item of items) {
+      if (!item) continue;
+      const target = item.id === "spiritual_effort" || item.name === "Meaningful effort to grow spiritual connection";
+      if (target && Number(item.points) === 8) item.points = 9;
+    }
+  }
 
   const settings = { streakThreshold: 0.8 };
   if (parsed.settings && parsed.settings.streakThreshold != null) {
